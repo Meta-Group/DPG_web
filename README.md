@@ -62,3 +62,12 @@ systemctl daemon-reload && systemctl enable --now wandb-dashboard
 
 JS libraries (Cytoscape, dagre, cytoscape-dagre, Plotly basic) are vendored in
 `static/vendor/`, so the page needs no CDN.
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` publishes `static/` to https://meta-group.github.io/DPG_web/
+(enable it once under Settings → Pages → Source: **GitHub Actions**).
+
+The Pages copy is the frontend only. Loading a run needs the `/api` routes of `app.py`, and
+W&B does not allow browser requests from `github.io` directly, so on Pages the UI renders but
+**Load** returns `HTTP 404`. Use `app.py` (above) to actually view runs.
