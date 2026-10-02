@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decision Predicate Graph</title>
+  <meta name="description" content="DPG is a model-agnostic framework for global and local explanation of tree-based ensemble models. pip install dpg.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 8L12 3.5M4 8l8 4.5' stroke='%231c1a14' stroke-width='1.2'/><circle cx='3' cy='8' r='2.4' fill='%23e8b500'/><circle cx='13' cy='3' r='2.4' fill='%23e07000'/><circle cx='13' cy='13' r='2.4' fill='%234b5e27'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/landing.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="nav-brand" href="./" aria-label="DPG home">
+        <svg class="nav-mark" viewBox="0 0 34 22" aria-hidden="true"><path d="M17 6.5C18 0 27 0 28 6.5M6 15.5C7 21.5 16 21.5 17 15.5"/><circle cx="6" cy="11" r="4.5" class="d1"/><circle cx="17" cy="11" r="4.5" class="d2"/><circle cx="28" cy="11" r="4.5" class="d3"/></svg>
+        <span>DPG</span>
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#install" class="hide-sm">Install</a>
+        <a href="#how" class="hide-sm">How it works</a>
+        <a href="#cite" class="hide-sm">Cite</a>
+        <a href="https://dpg.readthedocs.io/">Docs</a>
+        <a class="btn btn-sm" href="https://github.com/Meta-Group/DPG">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <img class="hero-logo" src="assets/dpg-logo.png" alt="Decision Predicate Graph" width="404" height="189">
+        <p class="lede">A <strong>model-agnostic graph framework</strong> for global and local explanation of
+          tree-based ensembles. DPG turns an ensemble's decision logic into one graph of predicates, transitions and
+          predictions you can inspect.</p>
+        <ul class="tags" aria-label="Topics">
+          <li class="tag">XAI</li>
+          <li class="tag tag-yellow">Tree ensembles</li>
+          <li class="tag tag-orange">Graph theory</li>
+          <li class="tag tag-olive">Interpretability</li>
+        </ul>
+
+        <div class="install" id="install-hero">
+          <code><span class="prompt" aria-hidden="true">$</span> <span data-copy-src>pip install dpg</span></code>
+          <button class="copy" type="button" data-copy>Copy</button>
+        </div>
+        <p class="meta"><span id="version">dpg 0.3.4</span> on <a href="https://pypi.org/project/dpg/">PyPI</a> ·
+          Python 3.10+ · MIT license</p>
+
+        <div class="cta">
+          <a class="btn btn-primary" href="https://dpg.readthedocs.io/">Read the docs</a>
+          <a class="btn" href="https://github.com/Meta-Group/DPG">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap figure-section" aria-label="Example graph">
+      <figure class="card graph">
+        <a href="assets/iris-dpg-communities.png" title="Open full size">
+          <img src="assets/iris-dpg-communities.png" alt="A Decision Predicate Graph of a 5-tree random forest on the Iris dataset, with predicate nodes coloured by community and edges leading to the three class nodes" width="2000" height="559">
+        </a>
+        <figcaption>A random forest with 5 trees on Iris, coloured by community. Each node is a predicate such as
+          <code>petal length (cm) &lt;= 2.45</code>, each edge weight counts the training samples that took that
+          transition, and every path ends in a class.</figcaption>
+      </figure>
+    </section>
+
+    <section class="wrap section" id="how">
+      <h2>How it works</h2>
+      <ol class="pipeline">
+        <li><span class="step step-cream" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="1.5"/><path d="M4 10h16M4 14.5h16M10 5v14"/></svg></span>
+          <strong>Tabular dataset</strong><span>features + labels</span></li>
+        <li><span class="step step-yellow" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l6 9h-3.5l4 6H5.5l4-6H6z"/><path d="M12 18v3"/></svg></span>
+          <strong>Tree-based ensemble</strong><span>RF · GB · ET · AdaBoost · Bagging</span></li>
+        <li><span class="step step-orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5l7.4 4.25v8.5L12 20.5l-7.4-4.25v-8.5z"/></svg></span>
+          <strong>Predicate extraction</strong><span>paths → nodes and edges</span></li>
+        <li><span class="step step-olive" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M8.2 7h7.6M7.2 9l3.6 7M16.8 9l-3.6 7"/></svg></span>
+          <strong>DPG construction</strong><span>weighted graph</span></li>
+        <li><span class="step step-red" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5l2.2 6.3 6.3 2.2-6.3 2.2L12 20.5l-2.2-6.3L3.5 12l6.3-2.2z"/></svg></span>
+          <strong>Analysis &amp; insights</strong><span>centrality · communities · local paths</span></li>
+      </ol>
+      <p class="note">Nodes are the predicates found in every node of every tree. Edges count how often the training
+        samples satisfy one predicate after another.</p>
+    </section>
+
+    <section class="wrap section" id="metrics">
+      <h2>What the graph tells you</h2>
+      <div class="grid">
+        <article class="card metric metric-yellow">
+          <h3>Constraints</h3>
+          <p>The value intervals of each feature along every path that ends in a class, i.e. the classification
+            boundaries of each class.</p>
+        </article>
+        <article class="card metric metric-orange">
+          <h3>Betweenness centrality</h3>
+          <p>The share of shortest paths passing through a node. High values flag bottleneck predicates: the crucial
+            decisions.</p>
+        </article>
+        <article class="card metric metric-olive">
+          <h3>Local reaching centrality</h3>
+          <p>How much of the graph a node reaches. Like feature importance, but tied to the feature values used in
+            every decision.</p>
+        </article>
+        <article class="card metric metric-red">
+          <h3>Communities</h3>
+          <p>Densely connected groups of predicates per class, separating the dominant decisions from the marginal
+            ones.</p>
+        </article>
+      </div>
+      <p class="note">Beyond the global graph: local explanations per sample, local-on-global plots, and faithfulness
+        diagnostics. See the <a href="https://dpg.readthedocs.io/en/latest/visualization.html">visualization
+        guide</a>.</p>
+    </section>
+
+    <section class="wrap section" id="install">
+      <h2>Get started</h2>
+      <div class="steps">
+        <div class="card step-card">
+          <h3><span class="num">1</span> Install the package</h3>
+          <div class="install install-block">
+            <code><span class="prompt" aria-hidden="true">$</span> <span data-copy-src>pip install dpg</span></code>
+            <button class="copy" type="button" data-copy>Copy</button>
+          </div>
+          <p class="small">Requires Python 3.10 or newer.</p>
+        </div>
+        <div class="card step-card">
+          <h3><span class="num">2</span> Add Graphviz for rendering</h3>
+          <p class="small">The <code>dot</code> executable must be on your <code>PATH</code> to draw graphs.</p>
+          <dl class="os">
+            <dt>macOS</dt><dd><code>brew install graphviz</code></dd>
+            <dt>Ubuntu / Debian</dt><dd><code>sudo apt-get install graphviz</code></dd>
+            <dt>Windows</dt><dd><code>winget install Graphviz.Graphviz</code></dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card code-card">
+        <div class="code-head">
+          <h3><span class="num">3</span> Explain a random forest</h3>
+          <button class="copy" type="button" data-copy>Copy</button>
+        </div>
+<pre><code data-copy-src><span class="k">import</span> numpy <span class="k">as</span> np
+<span class="k">from</span> sklearn.datasets <span class="k">import</span> load_iris
+<span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier
+<span class="k">from</span> dpg <span class="k">import</span> DPGExplainer
+
+X, y = load_iris(return_X_y=<span class="c">True</span>, as_frame=<span class="c">True</span>)
+model = RandomForestClassifier(n_estimators=<span class="n">5</span>, random_state=<span class="n">42</span>).fit(X, y)
+
+explainer = DPGExplainer(
+    model=model,
+    feature_names=X.columns.tolist(),
+    target_names=np.unique(y).astype(str).tolist(),
+)
+explanation = explainer.explain_global(X.values, communities=<span class="c">True</span>)
+explainer.plot_communities(<span class="s">"iris_dpg"</span>, explanation, save_dir=<span class="s">"results"</span>)</code></pre>
+        <div class="code-foot">
+          <p class="small">This writes the community graph shown above to <code>results/</code>. Prefer the
+            terminal? The <code>dpg</code> command does the same:</p>
+          <div class="install install-block">
+            <code><span class="prompt" aria-hidden="true">$</span> <span data-copy-src>dpg --dataset iris --n_learners 5 --plot --communities</span></code>
+            <button class="copy" type="button" data-copy>Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-links">
+        <a class="card doc-link" href="https://dpg.readthedocs.io/en/latest/quickstart.html">
+          <strong>Quickstart</strong><span>First graph in a few minutes</span></a>
+        <a class="card doc-link" href="https://dpg.readthedocs.io/en/latest/api_reference.html">
+          <strong>API reference</strong><span><code>DPGExplainer</code> and friends</span></a>
+        <a class="card doc-link" href="https://dpg.readthedocs.io/en/latest/supported_models.html">
+          <strong>Supported models</strong><span>scikit-learn tree ensembles</span></a>
+        <a class="card doc-link" href="https://github.com/Meta-Group/DPG/tree/main/examples">
+          <strong>Examples</strong><span>Runnable scripts on GitHub</span></a>
+      </div>
+    </section>
+
+    <section class="wrap section" id="cite">
+      <h2>Cite DPG</h2>
+      <p>If you use DPG in your research, please cite
+        <a href="https://doi.org/10.1007/978-3-031-63797-1_16"><em>Decision Predicate Graphs: Enhancing
+        Interpretability in Tree Ensembles</em></a> (World Conference on Explainable AI, 2024).</p>
+      <div class="card code-card">
+        <div class="code-head">
+          <h3>BibTeX</h3>
+          <button class="copy" type="button" data-copy>Copy</button>
+        </div>
+<pre><code data-copy-src>@inproceedings{arrighi2024dpg,
+  title={Decision Predicate Graphs: Enhancing Interpretability in Tree Ensembles},
+  author={Arrighi, Leonardo and Pennella, Luca and Marques Tavares, Gabriel and Barbon Junior, Sylvio},
+  booktitle={World Conference on Explainable Artificial Intelligence},
+  pages={311--332},
+  year={2024},
+  isbn={978-3-031-63797-1},
+  doi={10.1007/978-3-031-63797-1_16},
+  publisher={Springer Nature Switzerland},
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>DPG · MIT license · <a href="https://github.com/Meta-Group">Meta-Group</a></span>
+      <nav aria-label="Footer">
+        <a href="https://github.com/Meta-Group/DPG">GitHub</a>
+        <a href="https://dpg.readthedocs.io/">Docs</a>
+        <a href="https://pypi.org/project/dpg/">PyPI</a>
+        <a href="https://github.com/Meta-Group/DPG/blob/main/CHANGELOG.md">Changelog</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="assets/landing.js"></script>
+</body>
+</html>
