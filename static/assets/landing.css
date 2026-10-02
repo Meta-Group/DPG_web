@@ -21,6 +21,10 @@
   --g-class-fill: #1c1a14;
   --g-class-text: #fffdf7;
   --g-accent: #c8410f;
+  --c5: #2f7f86;
+  --c6: #7b4f8e;
+  --c7: #8c5a2b;
+  --c8: #5b6b7a;
   --radius: 10px;
   --font: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -47,6 +51,10 @@
   --g-class-fill: #f3ecda;
   --g-class-text: #1c1a14;
   --g-accent: #f2a24a;
+  --c5: #4fa3aa;
+  --c6: #a77bb9;
+  --c7: #b9824d;
+  --c8: #8a9aa8;
   color-scheme: dark;
 }
 

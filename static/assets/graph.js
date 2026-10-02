@@ -1,10 +1,10 @@
-// Interactive example DPG: a simpler take on the run viewer's graph (dashboard/app.js).
-// Data comes from assets/iris-dpg.json (scripts/export_iris_dpg.py).
+// Interactive DPG graph: a simpler take on the run viewer's graph (dashboard/app.js).
+// mountDPGGraph(host, data) renders graph JSON as written by dpg_sandbox.graph_data()
+// (sandbox/dpg_sandbox.py, also used by scripts/export_iris_dpg.py). Elements with a
+// data-dpg-src attribute are mounted automatically; if that fails their content stays.
 (() => {
-  const host = document.getElementById("dpg-graph");
-  if (!host || typeof cytoscape !== "function") return; // keep the static image
+  if (typeof cytoscape !== "function") return; // keep any static fallback content
 
-  const $ = (sel) => host.querySelector(sel);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   const fmt = (x) => (x === 0 ? "0" : Math.abs(x) < 0.01 ? x.toExponential(1) : x.toFixed(3).replace(/0+$/, "").replace(/\.$/, ""));
@@ -13,9 +13,8 @@
   const measure = document.createElement("canvas").getContext("2d");
   const textWidth = (t, bold) => { measure.font = `${bold ? 700 : 500} 13px ${FONT}`; return measure.measureText(t).width; };
 
-  // community -> brand colour (fill, text); class nodes are drawn in ink with a coloured ring
-  const COMMUNITY = { "Class 0": "--yellow", "Class 1": "--orange", "Class 2": "--olive" };
-  const commFill = (c) => (COMMUNITY[c] ? css(COMMUNITY[c]) : css("--g-plain-fill"));
+  // communities take the brand colours in order; class nodes are drawn in ink with a coloured ring
+  const PALETTE = ["--yellow", "--orange", "--olive", "--red", "--c5", "--c6", "--c7", "--c8"];
   const textOn = (hex) => {
     const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex); if (!m) return "#1c1a14";
     const [r, g, b] = m.slice(1).map((h) => { const c = parseInt(h, 16) / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
@@ -23,15 +22,19 @@
   };
   const RAMP = ["#f6ecd2", "#f3d9a4", "#efc275", "#eba54a", "#e38726", "#d7650f", "#c8410f", "#a33208"];
 
-  Promise.all([
-    fetch("assets/iris-dpg.json").then((r) => (r.ok ? r.json() : Promise.reject(r.status))),
-    document.fonts ? document.fonts.ready : Promise.resolve(),
-  ]).then(([data]) => mount(data)).catch(() => {}); // on failure the static image stays
+  const fmtW = (w) => (Number.isInteger(w) ? String(w) : fmt(w));
 
-  function mount(data) {
+  function mount(host, data, { label = "Interactive Decision Predicate Graph" } = {}) {
+    if (host._dpgDestroy) host._dpgDestroy();
+    const $ = (sel) => host.querySelector(sel);
     const weights = data.edges.map((e) => e.weight);
-    const wMin = Math.min(...weights), wMax = Math.max(...weights);
-    const bMax = Math.max(...data.nodes.map((n) => n.betweenness));
+    const wMin = weights.length ? Math.min(...weights) : 0, wMax = weights.length ? Math.max(...weights) : 1;
+    const bMax = Math.max(0, ...data.nodes.map((n) => n.betweenness || 0));
+    const named = data.communities.filter((c) => !/^ambiguous$/i.test(c));
+    const commFill = (c) => {
+      const i = named.indexOf(c);
+      return i >= 0 && i < PALETTE.length ? css(PALETTE[i]) : css("--g-plain-fill");
+    };
 
     host.classList.add("live");
     host.innerHTML = `
@@ -48,7 +51,7 @@
         </div>
       </div>
       <div class="g-stage">
-        <div class="g-cy" role="img" aria-label="Interactive Decision Predicate Graph of a 5-tree random forest on Iris"></div>
+        <div class="g-cy" role="img" aria-label="${esc(label)}"></div>
         <div class="g-hint" aria-live="polite"></div>
         ${touch ? `<button type="button" class="g-cover"><span>Tap to explore the graph</span></button><button type="button" class="g-done" hidden>Done</button>` : ""}
         <aside class="g-side" hidden></aside>
@@ -59,7 +62,7 @@
     let mode = "community", pinned = null, active = false;
     const elements = [
       ...data.nodes.map((n) => ({ data: { ...n, isClass: n.isClass ? 1 : 0, w: textWidth(n.label, n.isClass) + 22, ...colours(n) } })),
-      ...data.edges.map((e, i) => ({ data: { id: `e${i}`, ...e } })),
+      ...data.edges.map((e, i) => ({ data: { id: `e${i}`, ...e, wlabel: fmtW(e.weight) } })),
     ];
 
     const style = () => {
@@ -83,7 +86,7 @@
           "text-background-color": css("--g-bg"), "text-background-opacity": 0.9, "text-background-padding": "2px",
         } },
         { selector: ".faded", style: { opacity: 0.1 } },
-        { selector: "edge.hl", style: { "line-color": css("--g-accent"), "target-arrow-color": css("--g-accent"), label: "data(weight)", "z-index": 9 } },
+        { selector: "edge.hl", style: { "line-color": css("--g-accent"), "target-arrow-color": css("--g-accent"), label: "data(wlabel)", "z-index": 9 } },
         { selector: "node.focus", style: { "border-width": 4, "border-color": css("--g-accent") } },
       ];
     };
@@ -115,7 +118,7 @@
       } else {
         html += `<span>${sw(css("--g-plain-fill"))}predicate</span>`;
       }
-      html += `<span>${sw(css("--g-class-fill"))}class</span><span>edge width = training samples (${wMin}–${wMax})</span>`;
+      html += `<span>${sw(css("--g-class-fill"))}class</span><span>edge width = training samples (${fmtW(wMin)}–${fmtW(wMax)})</span>`;
       legend.innerHTML = html;
     }
 
@@ -144,7 +147,7 @@
     function details(node) {
       if (!node) { side.hidden = true; return; }
       const d = node.data();
-      const item = (e, other) => `<li><button type="button" data-id="${esc(other.id())}">${esc(other.data("label"))}</button><span>${e.data("weight")}</span></li>`;
+      const item = (e, other) => `<li><button type="button" data-id="${esc(other.id())}">${esc(other.data("label"))}</button><span>${e.data("wlabel")}</span></li>`;
       const ins = node.incomers("edge").sort((a, b) => b.data("weight") - a.data("weight"));
       const outs = node.outgoers("edge").sort((a, b) => b.data("weight") - a.data("weight"));
       const probs = Object.entries(d.probs || {}).sort((a, b) => b[1] - a[1]);
@@ -234,9 +237,28 @@
     }));
 
     // Re-read the theme colours when the light/dark toggle flips data-theme.
-    new MutationObserver(() => { cy.style(style()); paint(); if (pinned) details(pinned); })
-      .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const themeObserver = new MutationObserver(() => { cy.style(style()); paint(); if (pinned) details(pinned); });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     let resizeTimer = 0;
-    addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { cy.resize(); if (!pinned) fit(false); }, 150); });
+    const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { cy.resize(); if (!pinned) fit(false); }, 150); };
+    addEventListener("resize", onResize);
+
+    host._dpgDestroy = () => {
+      themeObserver.disconnect();
+      removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer); clearTimeout(hintTimer);
+      cy.destroy();
+      host._dpgDestroy = null;
+    };
+    return cy;
   }
+
+  window.mountDPGGraph = (host, data, opts) => (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => mount(host, data, opts));
+
+  document.querySelectorAll("[data-dpg-src]").forEach((host) => {
+    fetch(host.dataset.dpgSrc)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((data) => window.mountDPGGraph(host, data, { label: host.dataset.dpgLabel }))
+      .catch(() => {}); // the static fallback stays
+  });
 })();
