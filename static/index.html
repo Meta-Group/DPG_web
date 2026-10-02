@@ -48,7 +48,7 @@
           <li class="tag">XAI</li>
           <li class="tag tag-yellow">Tree ensembles</li>
           <li class="tag tag-orange">Graph theory</li>
-          <li class="tag tag-olive">Interpretability</li>
+          <li class="tag tag-olive">Explainability</li>
         </ul>
 
         <div class="install" id="install-hero">
@@ -158,18 +158,18 @@
           <h3><span class="num">3</span> Explain a random forest</h3>
           <button class="copy" type="button" data-copy>Copy</button>
         </div>
-<pre><code data-copy-src><span class="k">import</span> numpy <span class="k">as</span> np
-<span class="k">from</span> sklearn.datasets <span class="k">import</span> load_iris
+<pre><code data-copy-src><span class="k">from</span> sklearn.datasets <span class="k">import</span> load_iris
 <span class="k">from</span> sklearn.ensemble <span class="k">import</span> RandomForestClassifier
 <span class="k">from</span> dpg <span class="k">import</span> DPGExplainer
 
-X, y = load_iris(return_X_y=<span class="c">True</span>, as_frame=<span class="c">True</span>)
+iris = load_iris(as_frame=<span class="c">True</span>)
+X, y = iris.data, iris.target
 model = RandomForestClassifier(n_estimators=<span class="n">5</span>, random_state=<span class="n">42</span>).fit(X, y)
 
 explainer = DPGExplainer(
     model=model,
     feature_names=X.columns.tolist(),
-    target_names=np.unique(y).astype(str).tolist(),
+    target_names=[n.capitalize() for n in iris.target_names],
 )
 explanation = explainer.explain_global(X.values, communities=<span class="c">True</span>)
 explainer.plot_communities(<span class="s">"iris_dpg"</span>, explanation, save_dir=<span class="s">"results"</span>)</code></pre>
