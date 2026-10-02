@@ -15,7 +15,6 @@ import sys
 from importlib.metadata import version
 from pathlib import Path
 
-import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 
@@ -31,12 +30,13 @@ RANDOM_STATE = 42
 
 
 def main() -> None:
-    X, y = load_iris(return_X_y=True, as_frame=True)
+    iris = load_iris(as_frame=True)
+    X, y = iris.data, iris.target
     model = RandomForestClassifier(n_estimators=N_ESTIMATORS, random_state=RANDOM_STATE).fit(X, y)
     explainer = DPGExplainer(
         model=model,
         feature_names=X.columns.tolist(),
-        target_names=np.unique(y).astype(str).tolist(),
+        target_names=[n.capitalize() for n in iris.target_names],  # Setosa, Versicolor, Virginica
     )
     explanation = explainer.explain_global(X.values, communities=True)
 
