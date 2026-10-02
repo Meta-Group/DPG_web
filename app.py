@@ -30,7 +30,7 @@ INLINE_MAX_BYTES = 3 * 1024 * 1024
 ALLOWED_FILE_HOSTS = ("storage.googleapis.com", "api.wandb.ai")
 CACHE_TTL_S = 300
 
-app = Flask(__name__, static_folder="static", static_url_path="/static")
+app = Flask(__name__, static_folder="static", static_url_path="")
 _http = requests.Session()
 _cache: dict[tuple, tuple[float, dict]] = {}
 
