@@ -235,7 +235,8 @@ h3 { font-size: 1.1rem; margin: 0 0 .5rem; }
 .g-side dl { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; margin: 0; }
 .g-side dt { color: var(--muted); }
 .g-side dd { margin: 0; font-variant-numeric: tabular-nums; }
-.prob { display: grid; grid-template-columns: 1.2em 1fr 2.8em; align-items: center; gap: 8px; margin: 3px 0; font-variant-numeric: tabular-nums; }
+.prob { display: grid; grid-template-columns: 6.5em 1fr 2.8em; align-items: center; gap: 8px; margin: 3px 0; font-variant-numeric: tabular-nums; }
+.prob span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .prob span:last-child { text-align: right; color: var(--muted); }
 .prob .bar { height: 10px; border: 1.5px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--g-bg); }
 .prob .bar span { display: block; height: 100%; }
