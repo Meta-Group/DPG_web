@@ -6,6 +6,7 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 | Path | What |
 |---|---|
 | `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
+| `static/sandbox/` | Sandbox: an in-browser DPG notebook (below) |
 | `static/dashboard/` | W&B run viewer frontend (below) |
 | `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
 | `scripts/export_iris_dpg.py` | Rebuilds `static/assets/iris-dpg.json`, the landing page's interactive example graph (needs `pip install dpg`) |
@@ -16,6 +17,22 @@ at `/dashboard/` renders there but cannot load runs: it needs the `/api` routes 
 does not accept browser requests from the Pages origin. Run `app.py` to use it.
 
 To preview the site locally: `cd static && python3 -m http.server`.
+
+## Sandbox
+
+`static/sandbox/` runs DPG in the browser with [Pyodide](https://pyodide.org) (Python 3.14 and
+scikit-learn compiled to WebAssembly), so it works on GitHub Pages with no server.
+
+| File | What |
+|---|---|
+| `quickstart_iris.ipynb` | The notebook shown on the page (a real `.ipynb`), following DPG's `examples/quickstart_iris.py`. Lines ending in `# @param {...}` become form fields, in the style of Google Colab. |
+| `notebook.js` | Renders the cells (CodeMirror editors, Shift+Enter to run), the parameter form, CSV loading, rich outputs and `.ipynb` download. |
+| `worker.js` | Python kernel: Pyodide in a module web worker. It installs the latest `dpg` from PyPI with micropip on start. |
+| `dpg_sandbox.py` | Display helpers (`show_dataset`, `show_scores`, `show_graph`, `show_boundaries`). In the Sandbox they send JSON to the page; in Jupyter they fall back to IPython display, so a downloaded notebook runs there too. |
+
+The first visit downloads about 40 MB (Pyodide, NumPy, pandas, SciPy, scikit-learn, matplotlib)
+from the jsDelivr CDN, which the browser then caches. Loaded CSV files stay in the browser.
+To upgrade Pyodide, change the version in the `import` at the top of `worker.js`.
 
 ## W&B run viewer
 
