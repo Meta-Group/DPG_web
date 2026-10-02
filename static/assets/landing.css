@@ -27,30 +27,7 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #17150f;
-    --surface: #221f17;
-    --ink: #f3ecda;
-    --muted: #b3a98c;
-    --line: #5a5240;
-    --code-bg: #2b2719;
-    --olive: #7d9441;
-    --red: #e05a28;
-    --link: #f2a24a;
-    --shadow: 4px 4px 0 #000;
-    --g-bg: #1d1a13;
-    --g-edge-lo: #4a4436;
-    --g-edge-hi: #d9cfb5;
-    --g-node-border: #0d0c08;
-    --g-plain-fill: #3a3527;
-    --g-class-fill: #f3ecda;
-    --g-class-text: #1c1a14;
-    --g-accent: #f2a24a;
-    color-scheme: dark;
-  }
-}
-
+/* dark theme: only when picked with the nav toggle (assets/landing.js); light is the default */
 :root[data-theme="dark"] {
   --bg: #17150f;
   --surface: #221f17;
@@ -129,15 +106,22 @@ h3 { font-size: 1.1rem; margin: 0 0 .5rem; }
 .btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--line); }
 .btn-primary { background: var(--orange); color: var(--on-accent); }
 .btn-sm { padding: .35em .9em; font-size: .92rem; box-shadow: 3px 3px 0 var(--line); }
+.theme-toggle {
+  display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; cursor: pointer;
+  border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink);
+  box-shadow: 3px 3px 0 var(--line); transition: transform .08s, box-shadow .08s;
+}
+.theme-toggle:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--line); }
+.theme-toggle:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--line); }
+.theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .sun, :root[data-theme="dark"] .theme-toggle .moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .sun { display: block; }
 
 /* hero */
 .hero { text-align: center; padding: 56px 0 40px; }
 .hero-logo { width: min(420px, 86%); margin: 0 auto 20px; }
 /* the logo is drawn in black ink; give it a paper backing on dark backgrounds */
 :root[data-theme="dark"] .hero-logo { background: #f6f1e4; border-radius: 14px; padding: 10px 14px; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .hero-logo { background: #f6f1e4; border-radius: 14px; padding: 10px 14px; }
-}
 .lede { font-size: clamp(1.1rem, 2.2vw, 1.35rem); max-width: 720px; margin: 0 auto 22px; color: var(--muted); }
 .lede strong { color: var(--ink); }
 

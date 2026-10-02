@@ -1,3 +1,20 @@
+// Light/dark toggle. The choice is saved per browser; the inline script in index.html
+// applies it before first paint. Light is the default.
+const themeBtn = document.getElementById("theme-toggle");
+function setTheme(dark) {
+  if (dark) document.documentElement.dataset.theme = "dark";
+  else delete document.documentElement.dataset.theme;
+  themeBtn.setAttribute("aria-pressed", String(dark));
+  themeBtn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  themeBtn.title = themeBtn.getAttribute("aria-label");
+}
+setTheme(document.documentElement.dataset.theme === "dark");
+themeBtn.addEventListener("click", () => {
+  const dark = document.documentElement.dataset.theme !== "dark";
+  setTheme(dark);
+  try { localStorage.setItem("dpg.theme", dark ? "dark" : "light"); } catch {}
+});
+
 // Copy buttons: copy the nearest [data-copy-src] in the same block.
 // navigator.clipboard needs a secure context, so fall back to execCommand on plain http.
 async function copyText(text) {

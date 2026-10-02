@@ -233,8 +233,9 @@
       cy.animate({ zoom: { level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), level)), renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } }, duration: 150 });
     }));
 
-    // Re-read the theme colours when light/dark changes.
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { cy.style(style()); paint(); });
+    // Re-read the theme colours when the light/dark toggle flips data-theme.
+    new MutationObserver(() => { cy.style(style()); paint(); if (pinned) details(pinned); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     let resizeTimer = 0;
     addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { cy.resize(); if (!pinned) fit(false); }, 150); });
   }
