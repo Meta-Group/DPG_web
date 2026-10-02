@@ -58,9 +58,11 @@
 
     <section class="wrap figure-section" aria-label="Example graph">
       <figure class="card graph">
-        <a href="assets/iris-dpg-communities.png" title="Open full size">
-          <img src="assets/iris-dpg-communities.png" alt="A Decision Predicate Graph of a 5-tree random forest on the Iris dataset, with predicate nodes coloured by community and edges leading to the three class nodes" width="2000" height="559">
-        </a>
+        <div id="dpg-graph" class="dpg-graph">
+          <a href="assets/iris-dpg-communities.png" title="Open full size">
+            <img src="assets/iris-dpg-communities.png" alt="A Decision Predicate Graph of a 5-tree random forest on the Iris dataset, with predicate nodes coloured by community and edges leading to the three class nodes" width="2000" height="559">
+          </a>
+        </div>
         <figcaption>A random forest with 5 trees on Iris, coloured by community. Each node is a predicate such as
           <code>petal length (cm) &lt;= 2.45</code>, each edge weight counts the training samples that took that
           transition, and every path ends in a class.</figcaption>
@@ -220,5 +222,9 @@ explainer.plot_communities(<span class="s">"iris_dpg"</span>, explanation, save_
   </footer>
 
   <script src="assets/landing.js"></script>
+  <script src="dashboard/vendor/cytoscape.min.js" defer></script>
+  <script src="dashboard/vendor/dagre.min.js" defer></script>
+  <script src="dashboard/vendor/cytoscape-dagre.js" defer></script>
+  <script src="assets/graph.js" defer></script>
 </body>
 </html>
