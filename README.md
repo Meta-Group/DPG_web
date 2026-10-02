@@ -1,4 +1,22 @@
-# W&B run dashboard
+# DPG website
+
+Website for [Decision Predicate Graph (DPG)](https://github.com/Meta-Group/DPG), published with GitHub Pages
+at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_web/` redirects there).
+
+| Path | What |
+|---|---|
+| `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
+| `static/dashboard/` | W&B run viewer frontend (below) |
+| `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
+
+`.github/workflows/pages.yml` publishes `static/` on every push to `main` that touches it
+(Settings → Pages → Source: **GitHub Actions**). Pages hosts static files only, so the run viewer
+at `/dashboard/` renders there but cannot load runs: it needs the `/api` routes of `app.py`, and W&B
+does not accept browser requests from the Pages origin. Run `app.py` to use it.
+
+To preview the site locally: `cd static && python3 -m http.server`.
+
+## W&B run viewer
 
 A small Flask app that loads a single W&B run by id and shows everything about it.
 DPG graphs are rebuilt from their `dpg_structure` JSON artifacts as interactive
@@ -16,10 +34,10 @@ Cytoscape graphs instead of being shown as the logged PNGs.
 - **Artifacts**: every logged artifact, with CSV/JSON/text previews and download links.
 - **Config, environment, output.log**, and every run file.
 
-## Run
+### Run
 
 ```bash
-cd wandb_dashboard
+cd DPG_web
 /usr/bin/python3 -m venv .venv && .venv/bin/pip install flask requests waitress
 .venv/bin/python app.py          # http://0.0.0.0:8050/dashboard/
 ```
@@ -39,7 +57,7 @@ Environment variables:
 | `WANDB_BASE_URL` | `https://api.wandb.ai` | for self-hosted W&B |
 | `DASHBOARD_WANDB_API_KEY` | unset | server-side fallback key. Anyone who can reach the port can then read your W&B data, so only set it on a trusted network. |
 
-## Keep it running (systemd)
+### Keep it running (systemd)
 
 ```ini
 # /etc/systemd/system/wandb-dashboard.service
@@ -62,13 +80,3 @@ systemctl daemon-reload && systemctl enable --now wandb-dashboard
 
 JS libraries (Cytoscape, dagre, cytoscape-dagre, Plotly basic) are vendored in
 `static/dashboard/vendor/`, so the page needs no CDN.
-
-## GitHub Pages
-
-`.github/workflows/pages.yml` publishes `static/` to http://machinelearning.inginf.units.it/DPG_web/
-(`meta-group.github.io` redirects to the org's custom domain)
-(enable it once under Settings → Pages → Source: **GitHub Actions**).
-
-The Pages copy is the frontend only. Loading a run needs the `/api` routes of `app.py`, and
-W&B does not allow browser requests from `github.io` directly, so on Pages the UI renders but
-**Load** returns `HTTP 404`. Use `app.py` (above) to actually view runs.
