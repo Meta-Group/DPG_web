@@ -21,7 +21,7 @@ Cytoscape graphs instead of being shown as the logged PNGs.
 ```bash
 cd wandb_dashboard
 /usr/bin/python3 -m venv .venv && .venv/bin/pip install flask requests waitress
-.venv/bin/python app.py          # http://0.0.0.0:8050
+.venv/bin/python app.py          # http://0.0.0.0:8050/dashboard/
 ```
 
 Open the page, go to **Settings** and paste your API key (wandb.ai/authorize).
@@ -61,7 +61,7 @@ systemctl daemon-reload && systemctl enable --now wandb-dashboard
 ```
 
 JS libraries (Cytoscape, dagre, cytoscape-dagre, Plotly basic) are vendored in
-`static/vendor/`, so the page needs no CDN.
+`static/dashboard/vendor/`, so the page needs no CDN.
 
 ## GitHub Pages
 

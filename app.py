@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 import requests
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, redirect, request, send_from_directory
 
 WANDB_BASE_URL = os.environ.get("WANDB_BASE_URL", "https://api.wandb.ai").rstrip("/")
 # Optional server-side fallback key. Off unless explicitly set in the environment.
@@ -292,7 +292,12 @@ def build_run(key: str, entity: str, project: str, run_id: str) -> dict:
 
 @app.get("/")
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    return redirect("/dashboard/")
+
+
+@app.get("/dashboard/")
+def dashboard():
+    return send_from_directory(app.static_folder, "dashboard/index.html")
 
 
 @app.get("/api/whoami")
