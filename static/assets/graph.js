@@ -124,9 +124,10 @@
 
     const cy = cytoscape({
       container: cyEl, elements, style: style(), minZoom: 0.06, maxZoom: 3,
-      userZoomingEnabled: false, boxSelectionEnabled: false, autoungrabify: true,
+      userZoomingEnabled: false, boxSelectionEnabled: false,
       layout: { name: "dagre", rankDir: "LR", nodeSep: 8, rankSep: 40, edgeSep: 8 },
     });
+    cy.nodes("[isClass = 0]").ungrabify(); // only the class nodes can be dragged
     paint();
     const fit = (animate) => (animate ? cy.animate({ fit: { padding: 24 }, duration: 250 }) : cy.fit(undefined, 24));
     fit(false);
@@ -198,7 +199,7 @@
     function setHint(msg) {
       hint.textContent = msg || (touch
         ? (active ? "Pinch to zoom · drag to pan · tap a node for details" : "")
-        : (active ? "Scroll to zoom · drag to pan · hover a node to trace its paths · click for details"
+        : (active ? "Scroll to zoom · drag to pan · drag a class node to move it · hover a node to trace its paths · click for details"
           : "Click the graph to enable scroll-zoom · drag to pan · hover a node to trace its paths"));
     }
     let hintTimer = 0;
