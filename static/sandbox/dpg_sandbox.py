@@ -68,6 +68,11 @@ def _table(df: pd.DataFrame, caption: str | None = None, max_rows: int = MAX_TAB
     }
 
 
+def _bare(name: str) -> str:
+    """DPG names class nodes and class communities 'Class setosa'; show just 'setosa'."""
+    return name[len("Class "):] if name.startswith("Class ") else name
+
+
 def graph_data(explanation) -> dict:
     """Compact JSON for the interactive graph (assets/graph.js) from a DPGExplanation."""
     communities = explanation.communities or {}
@@ -84,19 +89,19 @@ def graph_data(explanation) -> dict:
         m = metrics.loc[node] if metrics is not None and node in metrics.index else None
         nodes.append({
             "id": ids[node],
-            "label": label,
+            "label": _bare(label),
             "isClass": label.startswith("Class "),
-            "community": community_of.get(label),
+            "community": _bare(community_of[label]) if label in community_of else None,
             "betweenness": round(float(m["Betweenness centrality"]), 4) if m is not None else 0.0,
             "lrc": round(float(m["Local reaching centrality"]), 4) if m is not None else 0.0,
-            "probs": {str(k): round(float(v), 3) for k, v in (probs.get(label) or {}).items()},
+            "probs": {_bare(str(k)): round(float(v), 3) for k, v in (probs.get(label) or {}).items()},
         })
     edges = []
     for u, v, d in explanation.graph.edges(data=True):
         w = float(d.get("weight", 1))
         edges.append({"source": ids[u], "target": ids[v], "weight": int(w) if w.is_integer() else round(w, 4)})
     return {
-        "communities": [name for name, members in clusters.items() if members],
+        "communities": [_bare(name) for name, members in clusters.items() if members],
         "nodes": nodes,
         "edges": edges,
     }
@@ -153,7 +158,10 @@ def ensure_iris(path: str = "iris.csv") -> str:
     """Write the Iris dataset (scikit-learn's bundled copy) to ``path`` if it is missing."""
     if not os.path.exists(path):
         from sklearn.datasets import load_iris
-        load_iris(as_frame=True).frame.to_csv(path, index=False)
+        iris = load_iris(as_frame=True)
+        frame = iris.frame
+        frame["target"] = frame["target"].map(dict(enumerate(n.capitalize() for n in iris.target_names)))  # Setosa, ...
+        frame.to_csv(path, index=False)
     return path
 
 
