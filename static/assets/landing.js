@@ -51,10 +51,13 @@ document.querySelectorAll("[data-copy]").forEach((btn) => {
 });
 
 // Show the latest PyPI release; the static text stays if the request fails.
-fetch("https://pypi.org/pypi/dpg/json")
-  .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-  .then((d) => {
-    const v = d && d.info && d.info.version;
-    if (v) document.getElementById("version").textContent = `dpg ${v}`;
-  })
-  .catch(() => {});
+const versionEl = document.getElementById("version");
+if (versionEl) {
+  fetch("https://pypi.org/pypi/dpg/json")
+    .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+    .then((d) => {
+      const v = d && d.info && d.info.version;
+      if (v) versionEl.textContent = `dpg ${v}`;
+    })
+    .catch(() => {});
+}
