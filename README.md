@@ -8,6 +8,7 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 | `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
 | `static/dashboard/` | W&B run viewer frontend (below) |
 | `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
+| `scripts/export_iris_dpg.py` | Rebuilds `static/assets/iris-dpg.json`, the landing page's interactive example graph (needs `pip install dpg`) |
 
 `.github/workflows/pages.yml` publishes `static/` on every push to `main` that touches it
 (Settings → Pages → Source: **GitHub Actions**). Pages hosts static files only, so the run viewer
