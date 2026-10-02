@@ -65,7 +65,8 @@ JS libraries (Cytoscape, dagre, cytoscape-dagre, Plotly basic) are vendored in
 
 ## GitHub Pages
 
-`.github/workflows/pages.yml` publishes `static/` to https://meta-group.github.io/DPG_web/
+`.github/workflows/pages.yml` publishes `static/` to http://machinelearning.inginf.units.it/DPG_web/
+(`meta-group.github.io` redirects to the org's custom domain)
 (enable it once under Settings → Pages → Source: **GitHub Actions**).
 
 The Pages copy is the frontend only. Loading a run needs the `/api` routes of `app.py`, and
