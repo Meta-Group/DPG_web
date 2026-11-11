@@ -4,6 +4,17 @@
 
 .sb-intro { padding: 40px 16px 18px; }
 .sb-intro h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin: 0 0 6px; letter-spacing: -.01em; }
+/* tabs shared by the Sandbox pages: the DPG notebook and Counterfactuals */
+.sb-tabs { display: flex; flex-wrap: wrap; margin: 4px 0 16px; }
+.sb-tabs a {
+  font: 600 .95rem var(--font); color: var(--ink); text-decoration: none; background: var(--surface);
+  border: 2px solid var(--line); margin-left: -2px; padding: .4em 1.1em;
+}
+.sb-tabs a:first-child { border-radius: 8px 0 0 8px; margin-left: 0; }
+.sb-tabs a:last-child { border-radius: 0 8px 8px 0; }
+.sb-tabs a:hover { background: var(--code-bg); }
+.sb-tabs a[aria-current="page"] { background: var(--yellow); color: var(--on-accent); box-shadow: inset 0 -3px 0 var(--line); }
+.sb-tabs a:focus-visible { outline: 3px solid var(--orange); outline-offset: 1px; position: relative; }
 .lede-left { color: var(--muted); max-width: 760px; margin: 0; font-size: 1.08rem; }
 
 /* sticky toolbar under the nav */
