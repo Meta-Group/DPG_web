@@ -1,5 +1,5 @@
 // Python for the Counterfactuals page: Pyodide in a module web worker, so DPG-CF runs
-// without freezing the page. Same Pyodide release as the Sandbox (../sandbox/worker.js).
+// without freezing the page. Same Pyodide release as the notebook (../worker.js).
 // Messages in:  {type: "file", name, bytes} | {type: "call", id, fn, args}
 // Messages out: {type: "status", state, text} | {type: "result", id, ok, value | error}
 import { loadPyodide } from "https://cdn.jsdelivr.net/pyodide/v314.0.7/full/pyodide.mjs";

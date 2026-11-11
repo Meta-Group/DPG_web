@@ -436,7 +436,7 @@
       "import numpy as np",
       "from sklearn.ensemble import RandomForestClassifier",
       "from sklearn.model_selection import train_test_split",
-      "from dpg_cf import ConstraintParser, CounterFactualModel  # static/counterfactual/dpg_cf/ in DPG_web",
+      "from dpg_cf import ConstraintParser, CounterFactualModel  # static/sandbox/counterfactuals/dpg_cf/ in DPG_web",
       "",
       "# X: DataFrame of numeric features, y: class labels encoded as 0..K-1",
       "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",

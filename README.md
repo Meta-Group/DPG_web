@@ -7,7 +7,7 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 |---|---|
 | `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
 | `static/sandbox/` | Sandbox: an in-browser DPG notebook (below) |
-| `static/counterfactual/` | Counterfactuals: DPG-CF counterfactual explanations in the browser (below) |
+| `static/sandbox/counterfactuals/` | Counterfactuals: DPG-CF counterfactual explanations in the browser (below) |
 | `scripts/vendor_dpg_cf.py` | Refreshes the copy of DPG-CF that the Counterfactuals page runs |
 | `static/dashboard/` | W&B run viewer frontend (below) |
 | `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
@@ -39,7 +39,7 @@ To upgrade Pyodide, change the version in the `import` at the top of `worker.js`
 
 ## Counterfactuals
 
-`static/counterfactual/` generates counterfactual explanations with DPG-CF, the method of
+`static/sandbox/counterfactuals/` generates counterfactual explanations with DPG-CF, the method of
 *Model-Centric Counterfactual Explanations via Decision Predicate Graphs*. DPG-CF reads per-class
 feature intervals off the model's DPG, merges them with actionability rules (`free`,
 `non_decreasing`, `non_increasing`, `no_change`) and searches inside them without touching the
@@ -73,8 +73,8 @@ To update DPG-CF: `.venv/bin/python scripts/vendor_dpg_cf.py ../DPG_research/cou
 to test a change before trying it in the browser:
 
 ```bash
-cd static/counterfactual
-../../.venv/bin/python -c "import json, dpg_cf_app as a; a.load_dataset('{\"preset\": \"diabetes\"}'); \
+cd static/sandbox/counterfactuals
+../../../.venv/bin/python -c "import json, dpg_cf_app as a; a.load_dataset('{\"preset\": \"diabetes\"}'); \
   a.train('{}'); print(json.loads(a.generate('{\"index\": 1, \"target\": 0}'))['metrics'])"
 ```
 

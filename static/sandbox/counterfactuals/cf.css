@@ -1,5 +1,5 @@
-/* Counterfactuals page. Builds on ../assets/landing.css tokens and reuses the Sandbox's
-   status bar, form, table and tile components from ../sandbox/sandbox.css. */
+/* Counterfactuals page. Builds on ../../assets/landing.css tokens and reuses the Sandbox's
+   status bar, form, table and tile components from ../sandbox.css. */
 
 .cf-steps { list-style: none; display: flex; gap: 6px; margin: 0; padding: 0; flex-wrap: wrap; }
 .cf-steps a {

@@ -1,4 +1,4 @@
-"""Copy the DPG-CF counterfactual core into static/counterfactual/dpg_cf/.
+"""Copy the DPG-CF counterfactual core into static/sandbox/counterfactuals/dpg_cf/.
 
 The Counterfactuals page runs DPG-CF in the browser with Pyodide. DPG-CF is not on PyPI
 yet, so the page ships a copy of the modules it needs. This script refreshes that copy
@@ -84,7 +84,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("source", type=Path, help="the counterfactual/ directory to copy from")
     parser.add_argument("--dest", type=Path,
-                        default=Path(__file__).resolve().parent.parent / "static" / "counterfactual" / "dpg_cf")
+                        default=Path(__file__).resolve().parent.parent / "static" / "sandbox" / "counterfactuals" / "dpg_cf")
     args = parser.parse_args()
     src, dest = args.source.resolve(), args.dest.resolve()
 
