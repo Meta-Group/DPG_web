@@ -7,7 +7,7 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 |---|---|
 | `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
 | `static/sandbox/` | Sandbox: an in-browser DPG notebook (below) |
-| `static/sandbox/counterfactuals/` | Counterfactuals: DPG-CF counterfactual explanations in the browser (below) |
+| `static/sandbox/counterfactuals/` | The Sandbox's Counterfactuals tab: DPG-CF counterfactual explanations in the browser (below) |
 | `scripts/vendor_dpg_cf.py` | Refreshes the copy of DPG-CF that the Counterfactuals page runs |
 | `static/dashboard/` | W&B run viewer frontend (below) |
 | `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
@@ -37,8 +37,9 @@ The first visit downloads about 40 MB (Pyodide, NumPy, pandas, SciPy, scikit-lea
 from the jsDelivr CDN, which the browser then caches. Loaded CSV files stay in the browser.
 To upgrade Pyodide, change the version in the `import` at the top of `worker.js`.
 
-## Counterfactuals
+## Sandbox: Counterfactuals
 
+The Sandbox has two tabs, the DPG notebook above and Counterfactuals.
 `static/sandbox/counterfactuals/` generates counterfactual explanations with DPG-CF, the method of
 *Model-Centric Counterfactual Explanations via Decision Predicate Graphs*. DPG-CF reads per-class
 feature intervals off the model's DPG, merges them with actionability rules (`free`,
@@ -57,7 +58,7 @@ intervals, a CSV download and the equivalent Python.
 | `dpg_cf/` | DPG-CF itself, copied from [DPG_research](https://github.com/Meta-Group/DPG_research/tree/main/counterfactual) by `scripts/vendor_dpg_cf.py` (imports made package-relative; see `dpg_cf/SOURCE.md`). Don't edit it by hand. |
 | `dpg_cf_app.py` | The page's Python API (`load_dataset`, `train`, `generate`): presets with the experiments' model settings and actionability rules, DPG constraint extraction, metrics. |
 | `worker.js` | Pyodide worker: installs `dpg` from PyPI, copies `dpg_cf/` (listed in `dpg_cf/MANIFEST.json`), `dpg_cf_app.py` and the preset CSV into its filesystem, and serves the page's calls. |
-| `cf.js`, `cf.css`, `index.html` | The page. It reuses the Sandbox's bar, form, table and tile styles. |
+| `cf.js`, `cf.css`, `index.html` | The page. It reuses the Sandbox's tabs, bar, form, table and tile styles (`../sandbox.css`). |
 | `datasets/diabetes.csv` | Pima diabetes, as used in the experiments (rows with a zero in any feature are dropped on load). |
 
 Defaults follow the paper's experiments (`methods.dpg` in DPG-CF's `configs/config.yaml`; per-dataset
