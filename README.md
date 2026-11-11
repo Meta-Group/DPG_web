@@ -7,6 +7,8 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 |---|---|
 | `static/index.html`, `static/assets/` | Landing page: what DPG is, `pip install dpg`, quickstart, links to the [docs](https://dpg.readthedocs.io/), citation |
 | `static/sandbox/` | Sandbox: an in-browser DPG notebook (below) |
+| `static/counterfactual/` | Counterfactuals: DPG-CF counterfactual explanations in the browser (below) |
+| `scripts/vendor_dpg_cf.py` | Refreshes the copy of DPG-CF that the Counterfactuals page runs |
 | `static/dashboard/` | W&B run viewer frontend (below) |
 | `app.py` | Flask server for the run viewer; also serves the landing page at `/` |
 | `scripts/export_iris_dpg.py` | Rebuilds `static/assets/iris-dpg.json`, the landing page's interactive example graph (needs `pip install dpg`) |
@@ -16,7 +18,8 @@ at http://machinelearning.inginf.units.it/DPG_web/ (`meta-group.github.io/DPG_we
 at `/dashboard/` renders there but cannot load runs: it needs the `/api` routes of `app.py`, and W&B
 does not accept browser requests from the Pages origin. Run `app.py` to use it.
 
-To preview the site locally: `cd static && python3 -m http.server`.
+To preview the site locally: `cd static && python3 -m http.server` (the Sandbox and Counterfactuals
+pages need it: they fetch their Python files, which `file://` URLs block).
 
 ## Sandbox
 
@@ -33,6 +36,47 @@ scikit-learn compiled to WebAssembly), so it works on GitHub Pages with no serve
 The first visit downloads about 40 MB (Pyodide, NumPy, pandas, SciPy, scikit-learn, matplotlib)
 from the jsDelivr CDN, which the browser then caches. Loaded CSV files stay in the browser.
 To upgrade Pyodide, change the version in the `import` at the top of `worker.js`.
+
+## Counterfactuals
+
+`static/counterfactual/` generates counterfactual explanations with DPG-CF, the method of
+*Model-Centric Counterfactual Explanations via Decision Predicate Graphs*. DPG-CF reads per-class
+feature intervals off the model's DPG, merges them with actionability rules (`free`,
+`non_decreasing`, `non_increasing`, `no_change`) and searches inside them without touching the
+training data. Like the Sandbox it runs on Pyodide, so it works on GitHub Pages.
+
+The page has three steps: train a random forest on a preset (Diabetes, the paper's worked
+example, or Iris) or on your CSV and see its DPG class intervals; pick a test instance, a target
+class and the actionability rules; generate. The result shows which search stage found the base
+counterfactual, the paper's metrics (validity, actionability, sparsity, MAD distance, diversity,
+implausibility), the changes per feature, where each counterfactual lands relative to the class
+intervals, a CSV download and the equivalent Python.
+
+| File | What |
+|---|---|
+| `dpg_cf/` | DPG-CF itself, copied from [DPG_research](https://github.com/Meta-Group/DPG_research/tree/main/counterfactual) by `scripts/vendor_dpg_cf.py` (imports made package-relative; see `dpg_cf/SOURCE.md`). Don't edit it by hand. |
+| `dpg_cf_app.py` | The page's Python API (`load_dataset`, `train`, `generate`): presets with the experiments' model settings and actionability rules, DPG constraint extraction, metrics. |
+| `worker.js` | Pyodide worker: installs `dpg` from PyPI, copies `dpg_cf/` (listed in `dpg_cf/MANIFEST.json`), `dpg_cf_app.py` and the preset CSV into its filesystem, and serves the page's calls. |
+| `cf.js`, `cf.css`, `index.html` | The page. It reuses the Sandbox's bar, form, table and tile styles. |
+| `datasets/diabetes.csv` | Pima diabetes, as used in the experiments (rows with a zero in any feature are dropped on load). |
+
+Defaults follow the paper's experiments (`methods.dpg` in DPG-CF's `configs/config.yaml`; per-dataset
+model settings and rules from `configs/<dataset>/config.yaml`; 80/20 split with `random_state=42`).
+One option is the page's own: *Close open-ended DPG intervals with the observed feature range*
+(on by default) fills a missing DPG bound, such as the lower bound in `Glucose <= 159`, with the
+training minimum or maximum. Without it the diverse-candidate stage can push such a feature far
+outside any realistic value (Glucose = -536 in one test). Switch it off for the paper's strictly
+data-free setting.
+
+To update DPG-CF: `.venv/bin/python scripts/vendor_dpg_cf.py ../DPG_research/counterfactual`.
+`dpg_cf_app.py` also runs under plain CPython (with `dpg` installed), which is the quickest way
+to test a change before trying it in the browser:
+
+```bash
+cd static/counterfactual
+../../.venv/bin/python -c "import json, dpg_cf_app as a; a.load_dataset('{\"preset\": \"diabetes\"}'); \
+  a.train('{}'); print(json.loads(a.generate('{\"index\": 1, \"target\": 0}'))['metrics'])"
+```
 
 ## W&B run viewer
 
