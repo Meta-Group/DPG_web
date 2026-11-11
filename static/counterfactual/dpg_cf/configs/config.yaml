@@ -1,0 +1,17 @@
+# The `constants` section of DPG-CF's configs/config.yaml (read by utils/config_manager.py).
+constants:
+  invalid_fitness: 1000000.0
+  class_penalty_soft_base: 100.0
+  class_penalty_hard_boost: 50.0
+  boundary_penalty_threshold: 0.1
+  boundary_penalty_value: 30.0
+  constraint_violation_multiplier: 2.0
+  mutation_epsilon: 0.01
+  sample_gen_range_scale: 0.5
+  sample_gen_escape_bias: 0.3
+  actionability_range_adjust: 0.1
+  default_boundary_distance: 0.05
+  fitness_sharing_base_sigma: 3.0
+  unconstrained_change_penalty_factor: 10.0
+  coverage_weight: 0.6
+  separation_weight: 0.4
