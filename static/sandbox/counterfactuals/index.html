@@ -41,11 +41,13 @@
 
   <main>
     <section class="wrap sb-intro">
-      <h1>Sandbox</h1>
-      <nav class="sb-tabs" aria-label="Sandbox">
-        <a href="../">DPG notebook</a>
-        <a href="./" aria-current="page">Counterfactuals</a>
-      </nav>
+      <div class="sb-head">
+        <h1>Sandbox</h1>
+        <nav class="sb-tabs" aria-label="Sandbox">
+          <a href="../">DPG notebook</a>
+          <a href="./" aria-current="page">Counterfactuals</a>
+        </nav>
+      </div>
       <p class="lede-left">What is the smallest change that would make the model decide differently? DPG-CF answers
         with counterfactual examples. It reads class intervals for each feature off the model's Decision Predicate
         Graph, combines them with rules about which features may change and in which direction, and searches inside

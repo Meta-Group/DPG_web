@@ -5,7 +5,9 @@
 .sb-intro { padding: 40px 16px 18px; }
 .sb-intro h1 { font-size: clamp(2rem, 4vw, 2.6rem); margin: 0 0 6px; letter-spacing: -.01em; }
 /* tabs shared by the Sandbox pages: the DPG notebook and Counterfactuals */
-.sb-tabs { display: flex; flex-wrap: wrap; margin: 4px 0 16px; }
+.sb-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 14px; }
+.sb-head h1 { margin: 0; }
+.sb-tabs { display: flex; flex-wrap: wrap; }
 .sb-tabs a {
   font: 600 .95rem var(--font); color: var(--ink); text-decoration: none; background: var(--surface);
   border: 2px solid var(--line); margin-left: -2px; padding: .4em 1.1em;
