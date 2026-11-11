@@ -351,11 +351,6 @@ pre .n, pre .c { color: var(--link); }
   .section { padding-top: 44px; }
 }
 
-/* phones: keep the nav on one line (Docs and GitHub are also in the footer) */
-@media (max-width: 480px) {
-  .hide-xs { display: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, .doc-link { transition: none; }
