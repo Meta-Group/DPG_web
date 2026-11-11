@@ -113,8 +113,8 @@ p.cf-hint { margin: 0 0 10px; }
 .cf-band-orig { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 3; }
 .cf-band-target { stroke: var(--line); stroke-width: 1.5; }
 .cf-open { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 2 3; fill: none; }
-.cf-x { fill: var(--surface); stroke: var(--line); stroke-width: 2; }
-.cf-dot { fill: var(--line); stroke: var(--surface); stroke-width: 1.5; }
+.cf-x { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+.cf-dot { fill: var(--ink); stroke: var(--surface); stroke-width: 1.5; }
 .cf-dot.invalid { fill: var(--red); }
 .cf-link { stroke: color-mix(in srgb, var(--line) 30%, transparent); stroke-width: 1; }
 
