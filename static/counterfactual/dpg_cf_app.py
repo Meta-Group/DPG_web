@@ -33,6 +33,7 @@ from dpg_cf.counterfactual_metrics import continuous_distance, continuous_divers
 
 HERE = Path(__file__).resolve().parent
 RULES = ("free", "non_decreasing", "non_increasing", "no_change")
+MAX_ROWS = 1000
 
 # DPG-CF settings of the paper's experiments (DPG_research counterfactual/configs/config.yaml,
 # methods._default merged with methods.dpg).
@@ -248,10 +249,13 @@ def train(params_json: str) -> str:
         cid = key[len("Class "):]
         constraints[cid] = {f: {"min": _num(b["min"]), "max": _num(b["max"])} for f, b in feats.items()}
 
+    # the page lists at most MAX_ROWS test instances, split evenly over the predicted classes
+    per_class = MAX_ROWS // len(_state["class_names"])
+    shown = sorted(i for c in np.unique(pred_test) for i in np.flatnonzero(pred_test == c)[:per_class])
     test_rows = []
-    for i in range(min(len(X_test), 500)):
+    for i in shown:
         test_rows.append({
-            "i": i,
+            "i": int(i),
             "values": [_num(v) for v in X_test.iloc[i].values],
             "true": int(y_test.iloc[i]),
             "pred": int(pred_test[i]),

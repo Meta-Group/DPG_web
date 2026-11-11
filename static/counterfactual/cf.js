@@ -235,7 +235,8 @@
     const filter = $("#pred-filter").value;
     const rows = model.test.filter((r) => filter === "" || r.pred === +filter);
     const names = model.class_names;
-    $("#row-count").textContent = `${rows.length} of ${model.n_test} test instances`;
+    const listed = model.test.length < model.n_test ? ` (${model.test.length} of ${model.n_test} listed, balanced by prediction)` : "";
+    $("#row-count").textContent = `${rows.length} test instances${listed}`;
     const head = `<tr><th>#</th>${data.features.map((f) => `<th class="numc">${esc(f)}</th>`).join("")}
       <th>Predicted</th><th class="numc">Confidence</th><th>True class</th></tr>`;
     const body = rows.map((r) => `<tr tabindex="0" data-i="${r.i}" aria-selected="${r.i === query.index}">
